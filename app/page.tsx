@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Navbar, Footer, WaFab, WaButton } from "@/components/Chrome";
 import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
-import { properties } from "@/lib/data";
+import { getProperties } from "@/lib/properties";
 import { Compass, ShieldCheck, Headphones, KeyRound, FileText, Search, CalendarCheck, Phone } from "lucide-react";
 
 const strip = [
@@ -19,7 +19,7 @@ const steps = [
   [KeyRound, "إتمام التعاقد", "ومتابعة حتى الاستلام"],
 ] as const;
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <main>
@@ -57,8 +57,8 @@ export default function Home() {
         </section>
 
         <section className="mx-auto max-w-[1280px] px-4 pb-16">
-          <div className="text-center"><h2 className="text-3xl font-extrabold text-forest-900">الوحدات المتاحة</h2><p className="mt-1 text-muted">اكتشف أحدث الوحدات (عرض تجريبي)</p></div>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{properties.map((p) => <PropertyCard key={p.slug} p={p} />)}</div>
+          <div className="text-center"><h2 className="text-3xl font-extrabold text-forest-900">الوحدات المتاحة</h2><p className="mt-1 text-muted">اكتشف أحدث الوحدات</p></div>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{(await getProperties()).slice(0, 8).map((p) => <PropertyCard key={p.slug} p={p} />)}</div>
           <div className="mt-8 text-center"><Link href="/properties" className="btn btn-primary">عرض كل الوحدات</Link></div>
         </section>
 

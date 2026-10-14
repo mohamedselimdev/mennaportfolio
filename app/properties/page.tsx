@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageNav, Footer, WaFab } from "@/components/Chrome";
 import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
-import { properties } from "@/lib/data";
+import { getProperties } from "@/lib/properties";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "الوحدات المتاحة", alternates: { canonical: "/properties" } };
@@ -10,14 +10,15 @@ export const metadata: Metadata = { title: "الوحدات المتاحة", alte
 export default async function Properties({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const q = await searchParams;
   const max = q.max ? Number(q.max) : undefined;
-  let list = properties.filter((p) => (!q.district || p.district === q.district) && (!q.type || p.type === q.type) && (!max || p.price == null || p.price <= max));
+  const all = await getProperties();
+  let list = all.filter((p) => (!q.district || p.district === q.district) && (!q.type || p.type === q.type) && (!max || p.price == null || p.price <= max));
   if (q.sort === "price") list = [...list].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
   return (
     <>
       <PageNav />
       <main className="mx-auto max-w-[1280px] px-4 py-10">
         <h1 className="text-3xl font-extrabold text-forest-900">الوحدات المتاحة</h1>
-        <div className="mt-6"><SearchBar /></div>
+        <div className="mt-6"><SearchBar districts={[...new Set(all.map((p) => p.district))]} types={[...new Set(all.map((p) => p.type))]} /></div>
         <div className="mt-6 flex gap-3 text-sm"><span className="text-muted">ترتيب:</span>
           <Link href={{ query: { ...q, sort: "" } }} className="underline">الأحدث</Link>
           <Link href={{ query: { ...q, sort: "price" } }} className="underline">السعر الأقل</Link></div>
