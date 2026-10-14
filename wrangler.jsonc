@@ -4,6 +4,6 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-09-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "kv_namespaces": [{ "binding": "SETTINGS" }],
+  "kv_namespaces": [{ "binding": "SETTINGS", "id": "1779a2ed9dd644b791a82e6bd6147c1d" }],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" }
 }
