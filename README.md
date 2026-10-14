@@ -19,3 +19,6 @@ Todo: Prisma/Postgres, Auth.js + RBAC, admin CRUD, analytics events, CMS.
 
 ## Admin auth
 Set secrets before deploying: `npx wrangler secret put ADMIN_USER` and `npx wrangler secret put ADMIN_PASSWORD` (use a long random password). Locally put both in `.env.local`. If either is missing, `/admin` returns 503.
+
+## Booking notifications
+Optional secrets: `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`, and/or `RESEND_API_KEY` + `NOTIFY_EMAIL_FROM` + `NOTIFY_EMAIL_TO`. Whatever is configured is used; failures never block a booking.

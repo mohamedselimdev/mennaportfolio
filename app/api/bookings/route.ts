@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createBooking } from "@/lib/bookings";
+import { notifyNewBooking } from "@/lib/notify";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -30,6 +31,7 @@ export async function POST(req: Request) {
     const r = await createBooking(b);
     if (r === "taken") return NextResponse.json({ error: "هذا الموعد محجوز، اختر موعدًا آخر" }, { status: 409 });
     if (r === "no-store") return NextResponse.json({ error: "تخزين الحجوزات غير مُفعّل بعد" }, { status: 503 });
+    notifyNewBooking(b);
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "تعذّر حفظ الطلب، حاول مرة أخرى" }, { status: 500 });
