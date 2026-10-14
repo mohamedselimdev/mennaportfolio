@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MessageCircle, Phone } from "lucide-react";
+import { hasRealProperties } from "@/lib/properties";
 import { waLink, generalMsg, getWhatsappNumber } from "@/lib/whatsapp";
 
 export function Logo({ light = true }: { light?: boolean }) {
@@ -47,7 +48,8 @@ export function PageNav() {
   return <div className="bg-forest-900 relative h-24 lg:h-20"><Navbar /></div>;
 }
 
-export function Footer() {
+export async function Footer() {
+  const demo = !(await hasRealProperties());
   return (
     <footer className="bg-forest-950 text-white/80">
       <div className="mx-auto max-w-[1280px] px-4 py-10 grid gap-8 md:grid-cols-3">
@@ -59,7 +61,7 @@ export function Footer() {
         <div className="text-sm space-y-2"><p className="font-bold text-white">قانوني</p>
           <Link className="block hover:text-gold-500" href="/privacy">سياسة الخصوصية</Link></div>
       </div>
-      <p className="border-t border-white/10 py-4 text-center text-xs">© منة مصطفى. الصور والوحدات المعروضة حالياً تجريبية للعرض فقط.</p>
+      <p className="border-t border-white/10 py-4 text-center text-xs">© منة مصطفى.{demo && " الصور والوحدات المعروضة حالياً تجريبية للعرض فقط."}</p>
     </footer>
   );
 }
