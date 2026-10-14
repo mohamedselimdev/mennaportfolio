@@ -22,3 +22,6 @@ Set secrets before deploying: `npx wrangler secret put ADMIN_USER` and `npx wran
 
 ## Booking notifications
 Optional secrets: `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`, and/or `RESEND_API_KEY` + `NOTIFY_EMAIL_FROM` + `NOTIFY_EMAIL_TO`. Whatever is configured is used; failures never block a booking.
+
+## Deploy from GitHub (no local setup)
+Repo Settings → Secrets and variables → Actions → add `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers"; also needs Workers KV Storage: Edit), `CLOUDFLARE_ACCOUNT_ID`, `ADMIN_USER`, `ADMIN_PASSWORD`. Then Actions → "Deploy to Cloudflare Workers" → Run workflow.
