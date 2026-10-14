@@ -13,5 +13,9 @@ npm run cf:deploy
 .env.local: NEXT_PUBLIC_WHATSAPP_NUMBER (E.164, digits only), NEXT_PUBLIC_SITE_URL
 
 ## Status
-Done: homepage, properties + detail, booking form (API validates; storage needs DB; returns 503 on Workers), contact, about, privacy, admin dashboard preview (demo numbers, UNPROTECTED, no auth yet).
+Done: homepage, properties + detail, booking form (API validates; storage needs DB; returns 503 on Workers), contact, about, privacy, admin dashboard preview (demo numbers, protected by Basic Auth in middleware.ts).
 Todo: Prisma/Postgres, Auth.js + RBAC, admin CRUD, analytics events, CMS.
+
+
+## Admin auth
+Set secrets before deploying: `npx wrangler secret put ADMIN_USER` and `npx wrangler secret put ADMIN_PASSWORD` (use a long random password). Locally put both in `.env.local`. If either is missing, `/admin` returns 503.

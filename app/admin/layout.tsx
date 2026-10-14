@@ -5,7 +5,7 @@ import { Home, Users, Building2, Layers, CalendarDays, PenSquare, FileText, BarC
 export const metadata: Metadata = { title: "لوحة التحكم", robots: { index: false, follow: false } };
 const items = [[Home, "الرئيسية", "/admin"], [Users, "العملاء المحتملون", "/admin/leads"], [Building2, "الوحدات", "/admin/properties"], [Layers, "المشاريع", "/admin/projects"], [CalendarDays, "الحجوزات", "/admin/bookings"], [PenSquare, "المحتوى", "/admin/content"], [FileText, "المدونة", "/admin/blog"], [BarChart3, "التحليلات", "/admin/analytics"], [Settings, "الإعدادات", "/admin/settings"]] as const;
 
-// TODO(auth): wrap with Auth.js session + RBAC check. Currently an UNPROTECTED preview shell: do not deploy publicly.
+// Access is gated by middleware.ts (Basic Auth via ADMIN_USER / ADMIN_PASSWORD). Replace with Auth.js + RBAC later.
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-cream lg:flex lg:flex-row-reverse">
