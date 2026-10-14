@@ -1,10 +1,42 @@
-export const WA_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(/\D/g, "");
-export const waValid = /^[1-9]\d{9,14}$/.test(WA_NUMBER);
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+
+type KV = { get(k: string): Promise<string | null>; put(k: string, v: string): Promise<void>; delete(k: string): Promise<void> };
+const KEY = "whatsapp_number";
+const ENV_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(/\D/g, "");
+
+/** E.164 digits without "+", e.g. 20XXXXXXXXXX. */
+export const isValidWa = (n: string) => /^[1-9]\d{9,14}$/.test(n);
+
+function kv(): KV | undefined {
+  try {
+    return (getCloudflareContext().env as { SETTINGS?: KV }).SETTINGS;
+  } catch {
+    return undefined; // not running on Workers (local build/dev)
+  }
+}
+
+export const hasSettingsStore = () => !!kv();
+
+/** Number saved from the dashboard (KV) wins; env var is the fallback. */
+export async function getWhatsappNumber(): Promise<string> {
+  try {
+    const saved = ((await kv()?.get(KEY)) ?? "").replace(/\D/g, "");
+    if (isValidWa(saved)) return saved;
+  } catch {}
+  return isValidWa(ENV_NUMBER) ? ENV_NUMBER : "";
+}
+
+export async function setWhatsappNumber(n: string) {
+  const store = kv();
+  if (!store) throw new Error("no-store");
+  if (n) await store.put(KEY, n);
+  else await store.delete(KEY);
+}
 
 /** wa.me link; falls back to /contact when no verified number is configured. */
-export function waLink(message: string) {
-  if (!waValid) return "/contact#form";
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+export function waLink(number: string, message: string) {
+  if (!number) return "/contact#form";
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 export const generalMsg = "مرحباً أستاذة منة، أرغب في الاستفسار عن الوحدات المتاحة.";
 export const propertyMsg = (name: string, code: string, url: string) =>

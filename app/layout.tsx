@@ -3,6 +3,9 @@ import "@fontsource-variable/cairo/index.css";
 import "@fontsource/tajawal/arabic-500.css";
 import "./globals.css";
 
+// WhatsApp number is editable from /admin/settings, so pages render per request.
+export const dynamic = "force-dynamic";
+
 const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(site),

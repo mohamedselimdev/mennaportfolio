@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MessageCircle, Phone } from "lucide-react";
-import { waLink, generalMsg } from "@/lib/whatsapp";
+import { waLink, generalMsg, getWhatsappNumber } from "@/lib/whatsapp";
 
 export function Logo({ light = true }: { light?: boolean }) {
   return (
@@ -14,8 +14,8 @@ export function Logo({ light = true }: { light?: boolean }) {
   );
 }
 
-export function WaButton({ message = generalMsg, label = "تواصل عبر واتساب", className = "btn btn-primary" }: { message?: string; label?: string; className?: string }) {
-  const href = waLink(message);
+export async function WaButton({ message = generalMsg, label = "تواصل عبر واتساب", className = "btn btn-primary" }: { message?: string; label?: string; className?: string }) {
+  const href = waLink(await getWhatsappNumber(), message);
   const external = href.startsWith("http");
   return (
     <a href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={className} data-event="whatsapp_click">
