@@ -13,7 +13,7 @@ npm run cf:deploy
 .env.local: NEXT_PUBLIC_WHATSAPP_NUMBER (E.164, digits only), NEXT_PUBLIC_SITE_URL
 
 ## Status
-Done: homepage, properties + detail, booking form (API validates; storage needs DB; returns 503 on Workers), contact, about, privacy, admin dashboard preview (demo numbers, protected by Basic Auth in middleware.ts).
+Done: homepage, properties + detail, booking form (validated, saved to Cloudflare KV, managed in /admin/bookings), contact, about, privacy, admin dashboard preview (demo numbers, protected by Basic Auth in middleware.ts).
 Todo: Prisma/Postgres, Auth.js + RBAC, admin CRUD, analytics events, CMS.
 
 

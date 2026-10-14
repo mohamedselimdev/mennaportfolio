@@ -1,19 +1,10 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { kv } from "./store";
 
-type KV = { get(k: string): Promise<string | null>; put(k: string, v: string): Promise<void>; delete(k: string): Promise<void> };
 const KEY = "whatsapp_number";
 const ENV_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(/\D/g, "");
 
 /** E.164 digits without "+", e.g. 20XXXXXXXXXX. */
 export const isValidWa = (n: string) => /^[1-9]\d{9,14}$/.test(n);
-
-function kv(): KV | undefined {
-  try {
-    return (getCloudflareContext().env as { SETTINGS?: KV }).SETTINGS;
-  } catch {
-    return undefined; // not running on Workers (local build/dev)
-  }
-}
 
 export const hasSettingsStore = () => !!kv();
 

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { promises as fs } from "fs";
-import path from "path";
+import { createBooking } from "@/lib/bookings";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -13,7 +12,6 @@ const schema = z.object({
   notes: z.string().trim().max(500).optional(),
   consent: z.literal(true),
 });
-const file = path.join(process.cwd(), "data", "bookings.json");
 const hits = new Map<string, number[]>();
 
 export async function POST(req: Request) {
@@ -29,12 +27,11 @@ export async function POST(req: Request) {
   if (new Date(`${b.date}T${b.time}:00+03:00`).getTime() < now) return NextResponse.json({ error: "اختر موعدًا في المستقبل" }, { status: 400 });
 
   try {
-  const all: { date: string; time: string }[] = JSON.parse(await fs.readFile(file, "utf8").catch(() => "[]"));
-  if (all.some((x) => x.date === b.date && x.time === b.time)) return NextResponse.json({ error: "هذا الموعد محجوز، اختر موعدًا آخر" }, { status: 409 });
-  all.push({ ...b, status: "pending", createdAt: new Date().toISOString() } as never);
-  await fs.writeFile(file, JSON.stringify(all, null, 2));
-  return NextResponse.json({ ok: true }, { status: 201 });
+    const r = await createBooking(b);
+    if (r === "taken") return NextResponse.json({ error: "هذا الموعد محجوز، اختر موعدًا آخر" }, { status: 409 });
+    if (r === "no-store") return NextResponse.json({ error: "تخزين الحجوزات غير مُفعّل بعد" }, { status: 503 });
+    return NextResponse.json({ ok: true }, { status: 201 });
   } catch {
-    return NextResponse.json({ error: "تخزين الحجوزات غير مُفعّل بعد (يتطلب قاعدة بيانات)" }, { status: 503 });
+    return NextResponse.json({ error: "تعذّر حفظ الطلب، حاول مرة أخرى" }, { status: 500 });
   }
 }
