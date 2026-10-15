@@ -1,3 +1,6 @@
+import { Stub } from "@/components/admin/Stub";
+
+export const metadata = { title: "العملاء المحتملون" };
 export default function Page() {
-  return <main className="card p-8"><h1 className="text-2xl font-extrabold text-forest-900">/admin/leads</h1><p className="mt-2 text-muted">قيد التنفيذ في المرحلة التالية (يتطلب قاعدة البيانات والمصادقة).</p></main>;
+  return <Stub title="العملاء المحتملون" desc="إدارة العملاء ومراحل المتابعة" items={["مراحل: جديد، تم التواصل، مؤهل، معاينة، تفاوض، تم، خسارة", "المصدر وحملات UTM", "ملاحظات ومتابعات", "سجل التعديلات"]} />;
 }

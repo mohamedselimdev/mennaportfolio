@@ -1,44 +1,38 @@
 import Link from "next/link";
 import { MessageCircle, Phone } from "lucide-react";
-import { hasRealProperties } from "@/lib/properties";
 import { waLink, generalMsg, getWhatsappNumber } from "@/lib/whatsapp";
+import { getDict, getTheme } from "@/lib/i18n";
+import { Toggles } from "@/components/Toggles";
+import { Logo } from "@/components/Brand";
 
-export function Logo({ light = true }: { light?: boolean }) {
-  return (
-    <Link href="/" className="flex items-center gap-3" aria-label="منة مصطفى - الرئيسية">
-      <span className="font-serif text-3xl leading-none tracking-tight text-gold-500" style={{ fontFamily: "Georgia, serif" }}>MM</span>
-      <span className={`hidden sm:block leading-tight ${light ? "text-white" : "text-forest-900"}`}>
-        <span className="block text-sm font-bold">Menna Mostafa</span>
-        <span className="block text-[11px] text-gold-500">Real Estate Consultant</span>
-      </span>
-    </Link>
-  );
-}
-
-export async function WaButton({ message = generalMsg, label = "تواصل عبر واتساب", className = "btn btn-primary" }: { message?: string; label?: string; className?: string }) {
+export async function WaButton({ message = generalMsg, label, className = "btn btn-primary" }: { message?: string; label?: string; className?: string }) {
+  const { t } = await getDict();
   const href = waLink(await getWhatsappNumber(), message);
   const external = href.startsWith("http");
   return (
     <a href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={className} data-event="whatsapp_click">
-      <MessageCircle size={18} aria-hidden /> {label}
+      <MessageCircle size={18} aria-hidden /> {label ?? t.wa}
     </a>
   );
 }
 
-const nav = [["/", "الرئيسية"], ["/properties", "الوحدات المتاحة"], ["/#projects", "المشاريع"], ["/about", "من أنا"], ["/#testimonials", "آراء العملاء"], ["/contact", "تواصل معي"]];
-
-export function Navbar() {
+export async function Navbar() {
+  const { t, lang } = await getDict();
+  const theme = await getTheme();
   return (
     <header className="absolute inset-x-0 top-0 z-30">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-4">
-        <Logo />
-        <nav aria-label="القائمة الرئيسية" className="hidden lg:flex items-center gap-7 text-sm text-white/90">
-          {nav.map(([h, l]) => <Link key={h} href={h} className="hover:text-gold-500 transition-colors">{l}</Link>)}
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-4 py-3 lg:px-8 lg:py-4">
+        <div className="flex items-center gap-3">
+          <WaButton className="btn btn-wa hidden text-sm !py-2 rounded-xl sm:inline-flex" />
+          <Toggles lang={lang} theme={theme} themeLabel={theme === "dark" ? t.themeLight : t.themeDark} langLabel={t.langBtn} />
+        </div>
+        <nav aria-label={lang === "ar" ? "القائمة الرئيسية" : "Main menu"} className="hidden lg:flex items-center gap-7 text-sm font-bold text-white/90">
+          {t.nav.map(([h, l], i) => <Link key={h} href={h} className={`pb-1 hover:text-gold-500 transition-colors ${i === 0 ? "border-b-2 border-gold-500 text-white" : ""}`}>{l}</Link>)}
         </nav>
-        <WaButton label="تواصل عبر واتساب" className="btn btn-outline text-sm !py-2 rounded-full" />
+        <Logo />
       </div>
-      <nav aria-label="قائمة الجوال" className="lg:hidden flex gap-5 overflow-x-auto px-4 pb-2 text-xs text-white/85 whitespace-nowrap">
-        {nav.map(([h, l]) => <Link key={h} href={h} className="py-2">{l}</Link>)}
+      <nav aria-label={lang === "ar" ? "قائمة الجوال" : "Mobile menu"} className="lg:hidden flex gap-5 overflow-x-auto px-4 pb-2 text-xs text-white/85 whitespace-nowrap">
+        {t.nav.map(([h, l]) => <Link key={h} href={h} className="py-2">{l}</Link>)}
       </nav>
     </header>
   );
@@ -49,28 +43,31 @@ export function PageNav() {
 }
 
 export async function Footer() {
-  const demo = !(await hasRealProperties());
+  const { t } = await getDict();
   return (
     <footer className="bg-forest-950 text-white/80">
-      <div className="mx-auto max-w-[1280px] px-4 py-10 grid gap-8 md:grid-cols-3">
-        <div><Logo /><p className="mt-3 text-sm">استشارات عقارية موثوقة لاختيار وحدتك المناسبة.</p></div>
-        <div className="text-sm space-y-2"><p className="font-bold text-white">روابط</p>
-          <Link className="block hover:text-gold-500" href="/properties">الوحدات المتاحة</Link>
-          <Link className="block hover:text-gold-500" href="/book-viewing">احجز معاينة</Link>
-          <Link className="block hover:text-gold-500" href="/contact">تواصل معي</Link></div>
-        <div className="text-sm space-y-2"><p className="font-bold text-white">قانوني</p>
-          <Link className="block hover:text-gold-500" href="/privacy">سياسة الخصوصية</Link></div>
+      <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-5 px-4 py-6 lg:flex-row">
+        <Logo />
+        <nav aria-label={t.links} className="flex min-w-0 flex-wrap justify-center gap-x-5 gap-y-3 text-sm">
+          {t.nav.map(([h, l]) => <Link key={h} href={h} className="hover:text-gold-500">{l}</Link>)}
+          <Link href="/privacy" className="hover:text-gold-500">{t.privacy}</Link>
+        </nav>
       </div>
-      <p className="border-t border-white/10 py-4 text-center text-xs">© منة مصطفى.{demo && " الصور والوحدات المعروضة حالياً تجريبية للعرض فقط."}</p>
+      <div className="border-t border-white/10 text-xs">
+        <div dir="ltr" className="mx-auto grid max-w-[1280px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 py-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-4 sm:px-4">
+          <p dir="auto" title={t.rights} className="col-start-2 row-start-1 min-w-0 truncate text-center text-[10px] text-white/65 sm:text-xs">{t.rights}</p>
+          <a dir="ltr" href="https://portfolio.mohamedselim.workers.dev/ar" target="_blank" rel="noopener noreferrer" aria-label="Developed by Mohamed Selim" className="col-start-1 row-start-1 inline-flex min-h-11 items-center justify-self-start gap-1 whitespace-nowrap text-[10px] text-white/80 hover:text-white sm:gap-2 sm:text-xs">
+            <span aria-hidden>Developed by</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/img/MS-logo.png" alt="" width={36} height={36} className="h-7 w-auto brightness-0 invert sm:h-9" />
+          </a>
+          <div className="col-start-3 row-start-1 justify-self-end">
+            <WaButton label={t.waShort} className="btn btn-primary rounded-full !px-2 !py-2 text-[10px] sm:!px-4 sm:text-xs [&_svg]:size-4" />
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }
 
-export function WaFab() {
-  return (
-    <div className="fixed bottom-4 start-4 z-40">
-      <WaButton label="واتساب" className="btn btn-primary shadow-lg rounded-full" />
-    </div>
-  );
-}
-export { Phone };
+export { Phone, Logo };

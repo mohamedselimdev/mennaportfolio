@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+
+export const metadata = { title: "المشاريع" };
 export default function Page() {
-  return <main className="card p-8"><h1 className="text-2xl font-extrabold text-forest-900">/admin/projects</h1><p className="mt-2 text-muted">قيد التنفيذ في المرحلة التالية (يتطلب قاعدة البيانات والمصادقة).</p></main>;
+  redirect("/admin/content#projects");
 }

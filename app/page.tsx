@@ -1,88 +1,139 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Navbar, Footer, WaFab, WaButton } from "@/components/Chrome";
+import { Navbar, Footer, WaButton } from "@/components/Chrome";
 import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
+import { Carousel } from "@/components/Carousel";
 import { getProperties } from "@/lib/properties";
-import { Compass, ShieldCheck, Headphones, KeyRound, FileText, Search, CalendarCheck, Phone } from "lucide-react";
+import { getDict } from "@/lib/i18n";
+import { getSiteContent } from "@/lib/site-content";
+import { ShieldCheck, HeartHandshake, Headphones, BadgeCheck, Star, UserRound, Phone, Mail, Quote, Home as HomeIcon, MessageCircleHeart, Users } from "lucide-react";
 
-const strip = [
-  [Compass, "إرشاد مخصص", "اختيار يناسب احتياجك وميزانيتك"],
-  [ShieldCheck, "معلومات موثّقة", "تُعرض فقط بعد التحقق منها"],
-  [Headphones, "استشارة مجانية", "نقاش أولي بدون التزام"],
-  [KeyRound, "متابعة بعد التعاقد", "معك في كل خطوة"],
-] as const;
-const steps = [
-  [FileText, "حدّد احتياجك", "أخبرني بما تبحث عنه"],
-  [Search, "عرض الخيارات", "أقدّم لك وحدات مناسبة"],
-  [CalendarCheck, "حجز معاينة", "نحدد موعدًا يناسبك"],
-  [KeyRound, "إتمام التعاقد", "ومتابعة حتى الاستلام"],
-] as const;
+const trustIcons = [ShieldCheck, HeartHandshake, Headphones, BadgeCheck];
+const heroIcons = [Users, HomeIcon, Star];
+const aboutIcons = [MessageCircleHeart, UserRound, BadgeCheck];
 
 export default async function Home() {
+  const { t, lang } = await getDict();
+  const props = await getProperties();
+  const content = await getSiteContent();
+  const types = [...new Set(props.map((p) => p.type))];
+  const districts = [...new Set(props.map((p) => p.district))];
   return (
     <>
       <main>
-        <section className="relative isolate min-h-[640px] bg-forest-950 text-white">
-          <div className="absolute inset-0 overflow-hidden -z-10"><Image src="/img/website_hero_architecture_detail.webp" alt="" fill priority sizes="100vw" className="object-cover object-center opacity-60 blur-[2px] scale-110" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(7,24,21,.2), rgba(7,24,21,.85))" }} /></div>
+        <section className="relative isolate overflow-hidden bg-forest-950 text-white">
+          <Image src={content.media.hero} unoptimized alt="" fill priority sizes="100vw" className="-z-10 object-cover object-center" />
+          <div className="absolute inset-0 -z-10" style={{ background: "linear-gradient(270deg, rgba(8,20,17,.05) 0%, rgba(8,20,17,.4) 50%, rgba(8,20,17,.7) 100%)" }} />
           <Navbar />
-          <div className="relative mx-auto flex max-w-[1280px] flex-col justify-center px-4 pt-36 pb-44 lg:pt-44">
-            <h1 className="reveal max-w-xl text-4xl font-extrabold leading-tight sm:text-6xl">بيتك القادم <br />أقرب مما تتخيل</h1>
-            <p className="reveal mt-5 max-w-lg text-white/85">مستشارة عقارية موثوقة لمساعدتك في اختيار أفضل وحدة سكنية أو استثمارية في أفضل المواقع.</p>
-            <span className="mt-4 text-[11px] text-white/50">صورة الخلفية توضيحية مؤقتة</span>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 translate-y-1/2 px-4 z-10"><SearchBar /></div>
-        </section>
-
-        <section className="bg-forest-900 pt-24 pb-8 text-white">
-          <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-6 px-4 lg:grid-cols-4">
-            {strip.map(([I, t, d]) => (
-              <div key={t} className="text-center"><I className="mx-auto mb-2 text-gold-500" aria-hidden /><p className="font-bold">{t}</p><p className="text-xs text-white/60">{d}</p></div>
-            ))}
-          </div>
-        </section>
-
-        <section id="about" className="mx-auto max-w-[1280px] px-4 py-16">
-          <div className="card grid overflow-hidden md:grid-cols-[1fr_1.4fr]">
-            <div className="relative min-h-[360px] bg-white">
-              <Image src="/img/menna-portrait.jpg" alt="منة مصطفى، مستشارة عقارية" fill sizes="(max-width:768px) 100vw, 40vw" className="object-cover object-top" />
+          <div className="mx-auto grid max-w-[1440px] gap-6 px-4 pt-28 lg:min-h-[640px] lg:grid-cols-2 lg:px-8 lg:pt-28 xl:min-h-[720px]">
+            <div className="relative order-2 hidden items-end justify-center lg:order-1 lg:flex">
+              <Image src={content.media.cutout} unoptimized alt={`${t.brand}, ${t.role}`} width={900} height={875} priority sizes="600px" className="relative z-10 -mb-px h-auto w-[520px] max-w-full xl:w-[600px] drop-shadow-2xl" />
+              <div className="absolute inset-x-0 bottom-6 z-20 px-4"><ul className="mx-auto grid max-w-md grid-cols-3 divide-x divide-white/15 rounded-2xl border border-white/20 bg-forest-950/60 py-4 backdrop-blur rtl:divide-x-reverse">
+                {t.heroBadges.map(([h, d], i) => { const I = heroIcons[i]; return (
+                  <li key={h} className="px-2 text-center"><I className="mx-auto mb-1 text-white" size={24} strokeWidth={1.4} aria-hidden /><p className="text-sm font-extrabold">{h}</p><p className="text-[11px] text-white/70">{d}</p></li>
+                ); })}
+              </ul></div>
             </div>
-            <div className="p-8 md:p-12">
-              <h2 className="text-3xl font-extrabold text-forest-900">من أنا؟</h2>
-              <p className="mt-4 leading-8 text-muted">أنا منة مصطفى، مستشارة عقارية أساعد العملاء على إيجاد وحدتهم المثالية للسكن أو الاستثمار، بتقديم معلومات دقيقة ومتابعة حقيقية في كل خطوة. <span className="text-xs">(نص تعريفي مؤقت، يُعدَّل من لوحة المحتوى)</span></p>
-              <Link href="/about" className="btn btn-primary mt-6">تعرّف أكثر عليّ</Link>
+            <div className="order-1 flex flex-col justify-center pb-10 lg:order-2 lg:pb-12">
+              <h1 className="reveal text-4xl font-extrabold leading-tight sm:text-5xl xl:text-7xl"><span className="block">{t.hero1}</span><span className="block text-gold-500">{t.hero2}</span></h1>
+              <p className="reveal mt-4 max-w-xl text-lg text-white/85">{t.heroSub}</p>
+              <div className="relative mx-auto mt-4 w-full max-w-[340px] lg:hidden">
+                <span aria-hidden className="absolute inset-x-6 top-10 bottom-0 rounded-full bg-gold-500/20 blur-3xl" />
+                <Image src={content.media.cutout} unoptimized alt={`${t.brand}, ${t.role}`} width={900} height={875} sizes="340px" loading="eager" className="relative h-auto w-full drop-shadow-2xl [mask-image:linear-gradient(to_bottom,#000_82%,transparent)]" />
+                <p className="relative -mt-12 rounded-2xl border border-white/20 bg-forest-950/80 px-4 py-2.5 text-center backdrop-blur"><span className="block text-lg font-extrabold">{t.brand}</span><span className="text-xs text-gold-500">{t.role}</span></p>
+              </div>
+              <SearchBar districts={districts} types={types} className="mt-6 lg:mt-8" />
+              <span className="mt-3 text-[11px] text-white/55">{t.heroNote}</span>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1280px] px-4 pb-16">
-          <div className="text-center"><h2 className="text-3xl font-extrabold text-forest-900">الوحدات المتاحة</h2><p className="mt-1 text-muted">اكتشف أحدث الوحدات</p></div>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{(await getProperties()).slice(0, 8).map((p) => <PropertyCard key={p.slug} p={p} />)}</div>
-          <div className="mt-8 text-center"><Link href="/properties" className="btn btn-primary">عرض كل الوحدات</Link></div>
+        <section className="section-cream py-12">
+          <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-8 px-4 lg:grid-cols-4">
+            {t.trust.map(([h, d], i) => { const I = trustIcons[i]; return (
+              <div key={h} className="text-center"><I className="mx-auto mb-3 text-gold-600" size={52} strokeWidth={1.1} aria-hidden /><p className="text-lg font-extrabold text-forest-900">{h}</p><p className="mt-1 text-sm text-muted">{d}</p></div>
+            ); })}
+          </div>
         </section>
 
-        <section id="projects" className="mx-auto grid max-w-[1280px] gap-5 px-4 pb-16 md:grid-cols-[2fr_1fr]">
-          <div className="card bg-forest-900 p-8 text-white !border-0"><h2 className="text-2xl font-extrabold">مشاريع مميزة</h2><p className="mt-2 text-white/70">سيتم عرض المطورين والمشاريع الحقيقية هنا بعد إضافتها وتأكيد الشراكات من لوحة التحكم.</p></div>
-          <div className="card flex flex-col items-start justify-center gap-3 bg-forest-800 p-8 text-white !border-0"><h2 className="text-xl font-extrabold">احجز وحدتك الآن بخطوات بسيطة</h2><WaButton className="btn btn-outline" label="تواصل عبر واتساب" /></div>
+        <section id="about" className="relative mx-auto grid max-w-[1280px] items-center gap-10 overflow-hidden px-4 py-16 lg:grid-cols-2">
+          <div className="relative">
+            <h2 className="text-4xl font-extrabold text-forest-900">{t.aboutT}</h2>
+            <p className="mt-4 max-w-xl leading-8 text-muted">{t.aboutP}</p>
+            <ul className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
+              {t.aboutPts.map((x, i) => { const I = aboutIcons[i]; return (
+                <li key={x} className="flex flex-col items-center gap-2 text-center text-sm font-bold text-forest-900"><I size={34} strokeWidth={1.2} className="text-gold-600" aria-hidden />{x}</li>
+              ); })}
+            </ul>
+            <div className="mt-7"><WaButton label={t.callNow} className="btn btn-ink !rounded-xl px-8" /></div>
+          </div>
+          <Link href="/about" className="group relative mx-auto block aspect-[799/1100] w-full max-w-md overflow-hidden rounded-2xl bg-[#F4F1EC] shadow-xl">
+            <Image src={content.media.about} unoptimized alt={`${t.brand}, ${t.role}`} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]" />
+            <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-sm font-bold text-white">{t.discover}</span>
+          </Link>
         </section>
 
-        <section className="mx-auto grid max-w-[1280px] gap-8 px-4 pb-16 lg:grid-cols-[2fr_1fr]">
-          <div><h2 className="text-3xl font-extrabold text-forest-900">كيف نبدأ؟</h2>
-            <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-              {steps.map(([I, t, d], i) => (
-                <div key={t} className="card p-4 text-center"><I className="mx-auto mb-2 text-forest-700" aria-hidden /><p className="font-bold text-sm">{i + 1}. {t}</p><p className="text-xs text-muted">{d}</p></div>
-              ))}</div></div>
-          <div className="card p-6"><h2 className="text-xl font-extrabold text-forest-900">تواصل معي مباشرة</h2><p className="mt-1 text-sm text-muted">للاستفسار أو لحجز معاينة أو استشارة مجانية</p>
-            <div className="mt-4 grid gap-3"><WaButton /><Link href="/book-viewing" className="btn btn-gold"><Phone size={16} aria-hidden /> احجز معاينة</Link></div></div>
+        <section id="projects" className="mx-auto max-w-[1280px] px-4 py-14">
+          <div className="text-center"><h2 className="text-3xl font-extrabold text-forest-900">{t.projT}</h2><p className="mt-1 text-muted">{t.projSub}</p></div>
+          <div className="mt-8">
+            <Carousel label={t.projT} prev={lang === "ar" ? "السابق" : "Previous"} next={lang === "ar" ? "التالي" : "Next"}>
+              {content.projects.map((project, i) => (
+                <li key={i} className="relative aspect-[4/3] w-[86%] shrink-0 snap-start overflow-hidden rounded-2xl bg-forest-800 sm:w-[calc(50%-.625rem)] lg:w-[calc(25%-.9375rem)]">
+                  <Image src={project.image} unoptimized alt={project[lang]} fill sizes="(max-width:1024px) 86vw, 25vw" className="object-cover" />
+                  <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/85 to-transparent p-3 text-white">
+                    <span className="text-sm font-bold sm:text-base">{project[lang]}</span>
+                  </div>
+                </li>
+              ))}
+            </Carousel>
+          </div>
         </section>
 
-        <section id="testimonials" className="bg-forest-900 py-14 text-center text-white">
-          <h2 className="text-3xl font-extrabold">آراء العملاء</h2>
-          <p className="mx-auto mt-3 max-w-md px-4 text-white/70">ستظهر هنا آراء العملاء الحقيقية بعد الحصول على موافقتهم. لا توجد آراء منشورة حاليًا.</p>
+        <section className="mx-auto max-w-[1280px] px-4 py-14">
+          <div className="text-center"><h2 className="text-3xl font-extrabold text-forest-900">{t.unitsT}</h2><p className="mt-1 text-muted">{t.unitsSub}</p></div>
+          <nav aria-label={t.unitsT} className="mt-6 flex flex-wrap justify-center gap-2 text-sm">
+            <Link href="/properties" className="rounded-xl bg-[#121816] px-6 py-2 font-bold text-white">{t.all}</Link>
+            {types.map((x) => <Link key={x} href={{ pathname: "/properties", query: { type: x } }} className="rounded-xl bg-[#E9E3D8] px-6 py-2 font-bold text-[#4a4a44] hover:bg-[#ddd5c6]">{x}</Link>)}
+          </nav>
+          <div className="mt-8">
+            <Carousel label={t.unitsT} prev={lang === "ar" ? "السابق" : "Previous"} next={lang === "ar" ? "التالي" : "Next"}>
+              {props.slice(0, 8).map((p) => <li key={p.slug} className="w-[86%] shrink-0 snap-start sm:w-[calc(50%-.625rem)] lg:w-[calc(33.333%-.8334rem)]"><PropertyCard p={p} /></li>)}
+            </Carousel>
+          </div>
+          <div className="mt-4 text-center"><Link href="/properties" className="btn btn-sand !rounded-xl px-8">{t.viewAll}</Link></div>
+        </section>
+
+        <section id="testimonials" className="section-cream py-14">
+          <div className="mx-auto max-w-[1280px] px-4">
+            <div className="text-center"><h2 className="text-3xl font-extrabold text-forest-900">{t.testT}</h2><p className="mx-auto mt-1 max-w-md text-muted">{t.testNone}</p></div>
+            <ul className="mt-8 grid gap-4 md:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <li key={i} className="card border-dashed p-5">
+                  <div className="flex items-start justify-between"><Quote className="text-gold-500" size={30} aria-hidden /><span className="grid h-12 w-12 place-items-center rounded-full bg-cream text-muted"><UserRound size={22} aria-hidden /></span></div>
+                  <p className="mt-3 text-sm leading-7 text-muted">{t.testPh}</p>
+                  <p className="mt-3 font-bold text-muted">{t.testPhName}</p>
+                  <div className="mt-1 flex gap-0.5 text-gold-500/50" aria-hidden>{[0, 1, 2, 3, 4].map((s) => <Star key={s} size={16} />)}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="relative isolate overflow-hidden bg-forest-950 py-16 text-center text-white">
+          <Image src={content.media.cta} unoptimized alt="" fill sizes="100vw" className="-z-10 object-cover opacity-35" />
+          <div className="mx-auto max-w-3xl px-4">
+            <h2 className="text-2xl font-extrabold sm:text-3xl">{t.ctaT}</h2>
+            <p className="mt-2 text-white/80">{t.ctaSub}</p>
+            <div className="mx-auto mt-7 grid w-full max-w-xs grid-cols-1 gap-3 sm:max-w-none sm:grid-cols-3">
+              <WaButton className="btn btn-wa !rounded-xl px-7" />
+              <Link href={content.phone ? `tel:${content.phone.replace(/[^+\d]/g, "")}` : "/contact"} className="btn btn-outline !rounded-xl px-7"><Phone size={18} aria-hidden /> {t.call}</Link>
+              <Link href={content.email ? `mailto:${content.email}` : "/book-viewing"} className="btn btn-outline !rounded-xl px-7"><Mail size={18} aria-hidden /> {t.msg}</Link>
+            </div>
+          </div>
         </section>
       </main>
-      <Footer /><WaFab />
+      <Footer />
     </>
   );
 }

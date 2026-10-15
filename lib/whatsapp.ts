@@ -11,8 +11,8 @@ export const hasSettingsStore = () => !!kv();
 /** Number saved from the dashboard (KV) wins; env var is the fallback. */
 export async function getWhatsappNumber(): Promise<string> {
   try {
-    const saved = ((await kv()?.get(KEY)) ?? "").replace(/\D/g, "");
-    if (isValidWa(saved)) return saved;
+    const saved = await kv()?.get(KEY);
+    if (saved != null) return isValidWa(saved) ? saved : "";
   } catch {}
   return isValidWa(ENV_NUMBER) ? ENV_NUMBER : "";
 }
@@ -20,8 +20,7 @@ export async function getWhatsappNumber(): Promise<string> {
 export async function setWhatsappNumber(n: string) {
   const store = kv();
   if (!store) throw new Error("no-store");
-  if (n) await store.put(KEY, n);
-  else await store.delete(KEY);
+  await store.put(KEY, n);
 }
 
 /** wa.me link; falls back to /contact when no verified number is configured. */

@@ -1,22 +1,39 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/cairo/index.css";
+import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
+import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
+import "@fontsource/ibm-plex-sans-arabic/arabic-700.css";
+import "@fontsource/ibm-plex-sans-arabic/latin-400.css";
+import "@fontsource/ibm-plex-sans-arabic/latin-500.css";
+import "@fontsource/ibm-plex-sans-arabic/latin-700.css";
 import "@fontsource/tajawal/arabic-500.css";
+import "@fontsource/el-messiri/arabic-500.css";
+import "@fontsource/el-messiri/arabic-700.css";
+import "@fontsource/playfair-display/latin-600.css";
+import "@fontsource/playfair-display/latin-700.css";
 import "./globals.css";
+import { getLang, getTheme, getDict } from "@/lib/i18n";
 
 // WhatsApp number is editable from /admin/settings, so pages render per request.
 export const dynamic = "force-dynamic";
 
 const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return {
   metadataBase: new URL(site),
-  title: { default: "منة مصطفى | مستشارة عقارية", template: "%s | منة مصطفى" },
-  description: "مستشارة عقارية تساعدك في اختيار أفضل وحدة سكنية أو استثمارية.",
+  applicationName: t.brand,
+  title: { default: `${t.brand} | ${t.role}`, template: `%s | ${t.brand}` },
+  openGraph: { siteName: t.brand, type: "website", locale: lang === "ar" ? "ar_EG" : "en_US", images: ["/brand/logo-light.png"] },
+  description: t.heroSub,
   alternates: { canonical: "/" },
-};
+  };
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const lang = await getLang();
+  const theme = await getTheme();
   return (
-    <html lang="ar" dir="rtl">
+    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"} data-theme={theme}>
       <body className="antialiased">{children}</body>
     </html>
   );

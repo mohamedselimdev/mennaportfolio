@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageNav, Footer, WaFab, WaButton } from "@/components/Chrome";
+import { PageNav, Footer, WaButton } from "@/components/Chrome";
 import { fmtPrice, fmtNum, statusLabel } from "@/lib/data";
 import { getProperty } from "@/lib/properties";
 import { propertyMsg } from "@/lib/whatsapp";
@@ -43,7 +43,7 @@ export default async function PropertyPage({ params }: P) {
           <Link href="/contact" className="btn w-full border border-line">اتصال بالمستشارة</Link>
         </aside>
       </main>
-      <Footer /><WaFab />
+      <Footer />
     </>
   );
 }

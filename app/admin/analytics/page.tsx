@@ -1,3 +1,6 @@
+import { Stub } from "@/components/admin/Stub";
+
+export const metadata = { title: "التحليلات" };
 export default function Page() {
-  return <main className="card p-8"><h1 className="text-2xl font-extrabold text-forest-900">/admin/analytics</h1><p className="mt-2 text-muted">قيد التنفيذ في المرحلة التالية (يتطلب قاعدة البيانات والمصادقة).</p></main>;
+  return <Stub title="التحليلات" desc="الزيارات والتحويلات ومصادر العملاء" items={["أحداث الزيارات والبحث", "نقرات واتساب", "مصادر UTM", "تكلفة الإعلانات (غير متصل)"]} />;
 }

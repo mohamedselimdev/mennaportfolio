@@ -1,3 +1,6 @@
+import { Stub } from "@/components/admin/Stub";
+
+export const metadata = { title: "المدونة" };
 export default function Page() {
-  return <main className="card p-8"><h1 className="text-2xl font-extrabold text-forest-900">/admin/blog</h1><p className="mt-2 text-muted">قيد التنفيذ في المرحلة التالية (يتطلب قاعدة البيانات والمصادقة).</p></main>;
+  return <Stub title="المدونة" desc="المقالات والنشر" items={["مقالات وتصنيفات", "بيانات SEO", "مسودة / منشور", "جدولة النشر"]} />;
 }

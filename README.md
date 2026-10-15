@@ -1,27 +1,98 @@
-# Menna Mostafa Real Estate (DEMO)
-Next.js 15 + Tailwind 4, Arabic RTL. Demo data/images only.
+# موقع منة مصطفى للعقارات
 
-## Run
-npm install && npm run dev
+موقع عربي وإنجليزي لعرض العقارات والمشاريع، استقبال طلبات المعاينة، والتواصل مع العملاء. يتضمن لوحة تحكم محمية لتعديل بيانات الموقع وإدارة العقارات والحجوزات.
 
-## Deploy as separate Cloudflare Worker (name: menna-realestate, does not touch other workers)
+[الموقع المنشور](https://menna-realestate.mohamedselim.workers.dev)
+
+## الوظائف المتاحة
+
+- عرض العقارات وتفاصيلها والبحث حسب النوع والمنطقة والميزانية.
+- تصفح كروت المشاريع والعقارات بالسحب، والتمرير، وأزرار التنقل، مع دعم اتجاه العربية.
+- حجز المعاينات وإدارة حالتها من لوحة التحكم.
+- تعديل الاسم، النبذة، العناوين والنصوص بالعربية والإنجليزية، والمميزات، وبيانات التواصل.
+- رفع صور الموقع بصيغ JPG وPNG وWebP، أو استخدام روابط صور HTTPS. الحد 2 ميجابايت للصورة و10 ميجابايت لإجمالي صور الطلب الواحد.
+- تعديل أسماء وصور كروت المشاريع من محرر بيانات الموقع؛ صور المشاريع تُحدد بروابط.
+- إدارة رقم واتساب وربط أزرار التواصل به.
+- وضع فاتح وداكن، وتصميم مناسب للموبايل والكمبيوتر.
+
+المدونة والعملاء المحتملون والتحليلات المتقدمة غير مفعّلة حاليًا، وتظهر في القائمة تحت «أدوات قادمة». العقارات والصور الافتراضية للعرض، وتستبدل العقارات التجريبية عند إضافة أول عقار حقيقي.
+
+## التقنيات والتنظيم
+
+Next.js 15، React 19، TypeScript، Tailwind CSS 4، Zod، وCloudflare Workers عبر OpenNext. تُحفظ البيانات والصور المرفوعة في Cloudflare KV المرتبط باسم `SETTINGS`.
+
+- `app/`: صفحات الموقع، لوحة التحكم، ومسارات الطلبات.
+- `components/`: مكونات العرض والنماذج المشتركة.
+- `lib/`: التحقق من المدخلات، التخزين، النصوص المترجمة، والحجوزات.
+- `public/`: الصور والأصول الثابتة.
+- `wrangler.jsonc`: إعداد خدمة Cloudflare وربط التخزين.
+
+## التشغيل محليًا
+
+استخدم Node.js 22 أو إصدارًا أحدث متوافقًا مع الاعتماديات، ثم:
+
+```sh
+npm ci
+npm run dev
+```
+
+افتح `http://localhost:3000`. لإنشاء وفحص نسخة الإنتاج:
+
+```sh
+npm run lint
+npm run build
+npm run start
+```
+
+اضبط متغيرات التطوير في `.env.local` ولا ترفع الملف إلى Git:
+
+```dotenv
+ADMIN_USER=your-local-admin-name
+ADMIN_PASSWORD=replace-with-a-long-random-password
+DEV_MEMORY_KV=1
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+`DEV_MEMORY_KV=1` مخصص للاختبار المحلي فقط: البيانات مؤقتة وتختفي عند إيقاف العملية. لا تفعّله في الإنتاج؛ الموقع المنشور يستخدم تخزين Cloudflare الدائم.
+
+## استخدام لوحة التحكم
+
+افتح `/admin` وسجّل الدخول ببيانات المسؤول:
+
+1. **تعديل بيانات الموقع**: افتح القسم المطلوب، عدّل النصوص أو الصور، ثم اضغط «حفظ التغييرات». تظهر رسالة نجاح أو خطأ؛ قد يستغرق وصول تحديثات التخزين للجميع دقيقة.
+2. **إعدادات واتساب**: أدخل رقمًا دوليًا مثل `201001234567`. ترك الحقل فارغًا يحوّل أزرار واتساب إلى صفحة التواصل.
+3. **العقارات والأسعار**: أضف عقارًا، أو عدّل بياناته وصورته وسعره وحالته.
+4. **كروت المشاريع**: تعديل أسماء وصور الكروت من قسم المشاريع داخل محرر بيانات الموقع.
+5. **الحجوزات**: متابعة طلبات المعاينة وتغيير حالتها.
+
+الاسم والنبذة والصور وبيانات التواصل تُحدّث من المحرر دون إعادة نشر الكود. النص الإنجليزي يُعدّل منفصلًا عن العربي؛ لا توجد ترجمة تلقائية.
+
+## النشر على Cloudflare
+
+راجع اسم الخدمة وربط `SETTINGS` في `wrangler.jsonc` قبل النشر. الحساب يحتاج صلاحية تعديل الخدمة وKV. اضبط أسرار الإدارة:
+
+```sh
 npx wrangler login
+npx wrangler secret put ADMIN_USER
+npx wrangler secret put ADMIN_PASSWORD
 npm run cf:deploy
-→ URL: https://menna-realestate.<your-subdomain>.workers.dev
+```
 
-## Config
-.env.local: NEXT_PUBLIC_WHATSAPP_NUMBER (E.164, digits only), NEXT_PUBLIC_SITE_URL
+لا تضع الأسرار في الكود أو المستودع. غياب بيانات المسؤول يمنع فتح لوحة التحكم. جميع عمليات حفظ المحتوى محمية بتسجيل الدخول، وتخضع المدخلات والصور للتحقق على الخادم.
 
-## Status
-Done: homepage, properties + detail, booking form (validated, saved to Cloudflare KV, managed in /admin/bookings), contact, about, privacy, admin dashboard (real booking and unit counts, protected by Basic Auth in middleware.ts).
-Todo: Prisma/Postgres, Auth.js + RBAC, admin CRUD, analytics events, CMS.
+يفضّل Linux أو WSL لبناء حزمة OpenNext؛ دعم Windows المباشر محدود. أمر `npm run cf:build` يبني الحزمة دون نشرها. بعد أي نشر، افحص الصفحات والصور والحجوزات وعناصر التحكم على الرابط الفعلي.
 
+## إعدادات اختيارية
 
-## Admin auth
-Set secrets before deploying: `npx wrangler secret put ADMIN_USER` and `npx wrangler secret put ADMIN_PASSWORD` (use a long random password). Locally put both in `.env.local`. If either is missing, `/admin` returns 503.
+| المتغير | الاستخدام |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | عنوان الموقع العام للروابط وبيانات المشاركة |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | رقم احتياطي عند عدم وجود إعداد محفوظ |
+| `TELEGRAM_BOT_TOKEN` و`TELEGRAM_CHAT_ID` | إشعارات الحجز عبر Telegram |
+| `RESEND_API_KEY` و`NOTIFY_EMAIL_FROM` و`NOTIFY_EMAIL_TO` | إشعارات الحجز بالبريد |
 
-## Booking notifications
-Optional secrets: `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`, and/or `RESEND_API_KEY` + `NOTIFY_EMAIL_FROM` + `NOTIFY_EMAIL_TO`. Whatever is configured is used; failures never block a booking.
+## النشر من GitHub
 
-## Deploy from GitHub (no local setup)
-Repo Settings → Secrets and variables → Actions → add `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers"; also needs Workers KV Storage: Edit), `CLOUDFLARE_ACCOUNT_ID`, `ADMIN_USER`, `ADMIN_PASSWORD`. Then Actions → "Deploy to Cloudflare Workers" → Run workflow.
+أضف أسرار Actions: `CLOUDFLARE_API_TOKEN`، `CLOUDFLARE_ACCOUNT_ID`، `ADMIN_USER`، و`ADMIN_PASSWORD`. ثم شغّل إجراء **Deploy to Cloudflare Workers** يدويًا من تبويب Actions. رفع الكود وحده لا يشغّل هذا الإجراء.
+
+قبل أي تحديث: افحص التغييرات، شغّل الفحوص والبناء محليًا، ثم انشر وتحقق من الموقع. احتفظ بنسخة احتياطية من البيانات قبل أي تعديل على طريقة تخزينها.
