@@ -56,7 +56,7 @@ export async function Footer() {
       <div className="border-t border-white/10 text-xs">
         <div dir="ltr" className="mx-auto grid max-w-[1280px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 py-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-4 sm:px-4">
           <p dir="auto" title={t.rights} className="col-start-2 row-start-1 min-w-0 truncate text-center text-[10px] text-white/65 sm:text-xs">{t.rights}</p>
-          <a dir="ltr" href="https://portfolio.mohamedselim.workers.dev/ar" target="_blank" rel="noopener noreferrer" aria-label="Developed by Mohamed Selim" className="col-start-1 row-start-1 inline-flex min-h-11 items-center justify-self-start gap-1 whitespace-nowrap text-[10px] text-white/80 hover:text-white sm:gap-2 sm:text-xs">
+          <a dir="ltr" href="https://mohamedselim.dev/ar" target="_blank" rel="noopener noreferrer" aria-label="Developed by Mohamed Selim" className="col-start-1 row-start-1 inline-flex min-h-11 items-center justify-self-start gap-1 whitespace-nowrap text-[10px] text-white/80 hover:text-white sm:gap-2 sm:text-xs">
             <span aria-hidden>Developed by</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/img/MS-logo.png" alt="" width={36} height={36} className="h-7 w-auto brightness-0 invert sm:h-9" />
