@@ -9,7 +9,7 @@ export const contentGroups = [
   { title: "التواصل وآراء العملاء", fields: [["ctaT", "عنوان دعوة التواصل"], ["ctaSub", "وصف دعوة التواصل"], ["contactT", "عنوان صفحة التواصل"], ["contactSub", "وصف صفحة التواصل"], ["testT", "عنوان آراء العملاء"], ["testNone", "وصف آراء العملاء"], ["rights", "حقوق الموقع"]] },
 ] as const;
 export const mediaFields = [["hero", "خلفية بداية الموقع"], ["cutout", "الصورة الشخصية في البداية"], ["about", "صورة قسم النبذة"], ["portrait", "صورة صفحة التعريف"], ["cta", "خلفية دعوة التواصل"]] as const;
-export const defaultMedia = { hero: "/img/hero.jpg", cutout: "/img/menna-cutout.webp", about: "/img/menna-about.jpg", portrait: "/img/menna-portrait.jpg", cta: "/img/website_partners_background_interior.webp" };
+export const defaultMedia = { hero: "/img/hero.jpg", cutout: "/img/menna-cutout.webp", about: "/img/menna-studio.jpg", portrait: "/img/menna-studio.jpg", cta: "/img/website_partners_background_interior.webp" };
 export const imageUrl = z.string().max(2048).refine((value) => {
   if (/^\/(?:img|brand|media)\/[A-Za-z0-9_./-]+$/.test(value) && !value.includes("..")) return true;
   try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password; } catch { return false; }

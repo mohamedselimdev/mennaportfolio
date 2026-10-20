@@ -26,23 +26,21 @@ export default async function Home() {
           <Image src={content.media.hero} unoptimized alt="" fill priority sizes="100vw" className="-z-10 object-cover object-center" />
           <div className="absolute inset-0 -z-10" style={{ background: "linear-gradient(270deg, rgba(8,20,17,.05) 0%, rgba(8,20,17,.4) 50%, rgba(8,20,17,.7) 100%)" }} />
           <Navbar />
-          <div className="mx-auto grid max-w-[1440px] gap-6 px-4 pt-28 lg:min-h-[640px] lg:grid-cols-2 lg:px-8 lg:pt-28 xl:min-h-[720px]">
-            <div className="relative order-2 hidden items-end justify-center lg:order-1 lg:flex">
-              <Image src={content.media.cutout} unoptimized alt={`${t.brand}, ${t.role}`} width={900} height={875} priority sizes="600px" className="relative z-10 -mb-px h-auto w-[520px] max-w-full xl:w-[600px] drop-shadow-2xl" />
-              <div className="absolute inset-x-0 bottom-6 z-20 px-4"><ul className="mx-auto grid max-w-md grid-cols-3 divide-x divide-white/15 rounded-2xl border border-white/20 bg-forest-950/60 py-4 backdrop-blur rtl:divide-x-reverse">
-                {t.heroBadges.map(([h, d], i) => { const I = heroIcons[i]; return (
-                  <li key={h} className="px-2 text-center"><I className="mx-auto mb-1 text-white" size={24} strokeWidth={1.4} aria-hidden /><p className="text-sm font-extrabold">{h}</p><p className="text-[11px] text-white/70">{d}</p></li>
-                ); })}
-              </ul></div>
-            </div>
-            <div className="order-1 flex flex-col justify-center pb-10 lg:order-2 lg:pb-12">
+          <div className="mx-auto grid max-w-[1440px] gap-6 px-4 pt-28 lg:min-h-[640px] lg:grid-cols-2 lg:gap-x-8 lg:px-8 lg:pt-28 xl:min-h-[720px]">
+            <div className="flex flex-col justify-end lg:col-start-2 lg:row-start-1">
               <h1 className="reveal text-4xl font-extrabold leading-tight sm:text-5xl xl:text-7xl"><span className="block">{t.hero1}</span><span className="block text-gold-500">{t.hero2}</span></h1>
               <p className="reveal mt-4 max-w-xl text-lg text-white/85">{t.heroSub}</p>
-              <div className="relative mx-auto mt-4 w-full max-w-[340px] lg:hidden">
-                <span aria-hidden className="absolute inset-x-6 top-10 bottom-0 rounded-full bg-gold-500/20 blur-3xl" />
-                <Image src={content.media.cutout} unoptimized alt={`${t.brand}, ${t.role}`} width={900} height={875} sizes="340px" loading="eager" className="relative h-auto w-full drop-shadow-2xl [mask-image:linear-gradient(to_bottom,#000_82%,transparent)]" />
-                <p className="relative -mt-12 rounded-2xl border border-white/20 bg-forest-950/80 px-4 py-2.5 text-center backdrop-blur"><span className="block text-lg font-extrabold">{t.brand}</span><span className="text-xs text-gold-500">{t.role}</span></p>
-              </div>
+            </div>
+            <div className="relative mx-auto lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-end flex w-full max-w-[360px] items-end justify-center lg:max-w-[560px]">
+              <span aria-hidden className="absolute inset-x-8 top-16 bottom-0 rounded-full bg-gold-500/15 blur-3xl" />
+              <Image src={content.media.cutout} unoptimized alt={`${t.brand}, ${t.role}`} width={900} height={1085} priority sizes="(max-width:1024px) 360px, 560px" className="relative z-10 h-auto w-full [mask-image:linear-gradient(to_bottom,#000_86%,transparent)]" />
+              <ul className="absolute inset-x-3 -bottom-4 z-20 grid grid-cols-3 divide-x divide-white/15 rounded-2xl border border-white/20 bg-forest-950/80 py-3 backdrop-blur rtl:divide-x-reverse lg:inset-x-6">
+                {t.heroBadges.map(([h, d], i) => { const I = heroIcons[i]; return (
+                  <li key={h} className="px-1 text-center"><I className="mx-auto mb-1 text-white" size={20} strokeWidth={1.4} aria-hidden /><p className="text-xs font-extrabold sm:text-sm">{h}</p><p className="text-[10px] text-white/70 sm:text-[11px]">{d}</p></li>
+                ); })}
+              </ul>
+            </div>
+            <div className="pb-16 lg:col-start-2 lg:row-start-2 lg:pb-12">
               <SearchBar districts={districts} types={types} className="mt-6 lg:mt-8" />
               <span className="mt-3 text-[11px] text-white/55">{t.heroNote}</span>
             </div>
@@ -58,9 +56,14 @@ export default async function Home() {
         </section>
 
         <section id="about" className="relative mx-auto grid max-w-[1280px] items-center gap-10 overflow-hidden px-4 py-16 lg:grid-cols-2">
-          <div className="relative">
+          <span aria-hidden dir="ltr" className="font-script pointer-events-none absolute -bottom-6 start-1/3 select-none whitespace-nowrap text-[9rem] leading-none text-forest-900/[0.05] dark:text-white/[0.05] lg:text-[12rem]">Menna Mostafa</span>
+          <div className="relative text-center lg:text-start">
             <h2 className="text-4xl font-extrabold text-forest-900">{t.aboutT}</h2>
-            <p className="mt-4 max-w-xl leading-8 text-muted">{t.aboutP}</p>
+            <p className="mx-auto mt-4 max-w-xl leading-8 text-muted lg:mx-0">{t.aboutP}</p>
+            <div dir="ltr" className="mt-5 text-center lg:text-left" aria-hidden>
+              <p className="font-script text-5xl leading-none text-gold-600 sm:text-6xl">Menna Mostafa</p>
+              <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.35em] text-muted">Real Estate Consultant</p>
+            </div>
             <ul className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
               {t.aboutPts.map((x, i) => { const I = aboutIcons[i]; return (
                 <li key={x} className="flex flex-col items-center gap-2 text-center text-sm font-bold text-forest-900"><I size={34} strokeWidth={1.2} className="text-gold-600" aria-hidden />{x}</li>
@@ -69,7 +72,7 @@ export default async function Home() {
             <div className="mt-7"><WaButton label={t.callNow} className="btn btn-ink !rounded-xl px-8" /></div>
           </div>
           <Link href="/about" className="group relative mx-auto block aspect-[799/1100] w-full max-w-md overflow-hidden rounded-2xl bg-[#F4F1EC] shadow-xl">
-            <Image src={content.media.about} unoptimized alt={`${t.brand}, ${t.role}`} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]" />
+            <Image src={content.media.about} unoptimized alt={`${t.brand}, ${t.role}`} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]" />
             <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-sm font-bold text-white">{t.discover}</span>
           </Link>
         </section>

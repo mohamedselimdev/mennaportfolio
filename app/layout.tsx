@@ -10,6 +10,7 @@ import "@fontsource/el-messiri/arabic-500.css";
 import "@fontsource/el-messiri/arabic-700.css";
 import "@fontsource/playfair-display/latin-600.css";
 import "@fontsource/playfair-display/latin-700.css";
+import "@fontsource/pinyon-script/latin-400.css";
 import "./globals.css";
 import { getLang, getTheme, getDict } from "@/lib/i18n";
 
@@ -23,8 +24,9 @@ export async function generateMetadata(): Promise<Metadata> {
   metadataBase: new URL(site),
   applicationName: t.brand,
   title: { default: `${t.brand} | ${t.role}`, template: `%s | ${t.brand}` },
-  openGraph: { siteName: t.brand, type: "website", locale: lang === "ar" ? "ar_EG" : "en_US", images: ["/brand/logo-light.png"] },
+  openGraph: { siteName: t.brand, type: "website", locale: lang === "ar" ? "ar_EG" : "en_US", images: [{ url: "/brand/og.jpg", width: 1200, height: 630, alt: "Menna Mostafa | منة مصطفى" }] },
   description: t.heroSub,
+  twitter: { card: "summary_large_image", images: ["/brand/og.jpg"] },
   alternates: { canonical: "/" },
   };
 }

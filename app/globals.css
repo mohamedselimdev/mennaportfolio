@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 :root {
   --forest-950:#06241A; --forest-900:#0C3B26; --forest-800:#0F4A30; --forest-700:#0E5A37; --forest-600:#12724A;
@@ -43,3 +44,5 @@ body{background:var(--background);color:var(--text);font-family:'IBM Plex Sans A
 [data-theme="dark"] .btn-gold{background:var(--forest-800);color:var(--gold-200)}
 [data-theme="dark"] .btn-gold:hover{background:var(--forest-700)}
 .section-cream{background:var(--paper)}
+
+.font-script{font-family:"Pinyon Script","Brush Script MT",cursive;font-weight:400;letter-spacing:.01em}
